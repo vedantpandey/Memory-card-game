@@ -1,8 +1,27 @@
 /*
  * Create a list that holds all of your cards
- */
+*/
 
+let reset = document.querySelector('.fa-repeat');
 
+reset.addEventListener('click', function () {
+    let cardList = document.querySelectorAll('.card');
+    let contarr = [];
+    for(let i=0;i<cardList.length;i++){
+        let par = cardList[i];
+        let ch = par.firstElementChild;
+        contarr.push(ch);
+        ch.remove();
+    }
+
+    shuffle(contarr);
+
+    for(let i=0;i<cardList.length;i++){
+        let par = cardList[i];
+        let ch = contarr[i];
+        par.appendChild(ch);
+    }
+});
 /*
  * Display the cards on the page
  *   - shuffle the list of cards using the provided "shuffle" method below
