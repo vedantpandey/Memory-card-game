@@ -44,7 +44,85 @@ function shuffle(array) {
     return array;
 }
 
+function displayCard(ele){
+    let clist = ele.classList;
+    clist.add('open');
+    clist.add('show');
+}
 
+let deckEl = document.querySelector('.deck');
+let openedCard,target;
+let ctr=0;
+
+deckEl.addEventListener('click', function (evt) {
+    target = evt.target;
+    if(target.nodeName == "LI" || target.nodeName == "I"){
+
+        if(ctr == 0){
+            displayCard(target);
+            ctr = 1;
+            openedCard = target;
+        }
+
+        else if(ctr == 1){
+            displayCard(target);
+            ctr = 0;
+            
+            if(target.firstElementChild.className == openedCard.firstElementChild.className)
+                Matchcard();
+            else{
+                MismatchCard();
+            }
+                
+        }
+    }
+});
+
+function Matchcard(){
+    let c1 = openedCard.classList;
+    let c2 = target.classList;
+
+    c1.remove('open');
+    c1.remove('show');
+    c2.remove('open');
+    c2.remove('show');
+
+    c1.add('match');
+    c2.add('match');
+}
+
+
+function MismatchCard(){
+    let c1 = openedCard.classList;
+    let c2 = target.classList;
+
+    c1.remove('open');
+    c1.remove('show');
+    c2.remove('open');
+    c2.remove('show');
+
+    c1.add('wrong');
+    c2.add('wrong');
+
+    aftermismatch();
+}
+
+function remove(){
+    let c1 = openedCard.classList;
+    let c2 = target.classList;
+
+    c1.remove('open');
+    c1.remove('show');
+    c2.remove('open');
+    c2.remove('show');
+    c1.remove('wrong');
+    c2.remove('wrong');
+    
+}
+
+function aftermismatch(){
+    setTimeout(remove, 1000);
+}
 /*
  * set up the event listener for a card. If a card is clicked:
  *  - display the card's symbol (put this functionality in another function that you call from this one)
