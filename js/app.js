@@ -4,6 +4,16 @@
 
 let reset = document.querySelector('.fa-repeat');
 
+let deckEl = document.querySelector('.deck');
+let openedCard,target;
+let ctr=0;
+let oclist = [],res;
+let moves=0;
+let moveEl = document.querySelector('.moves');
+let starEl = document.querySelector('.stars');
+
+
+//Reset operation
 reset.addEventListener('click', function () {
     let cardList = document.querySelectorAll('.card');
     let contarr = [];
@@ -12,6 +22,7 @@ reset.addEventListener('click', function () {
         let ch = par.firstElementChild;
         contarr.push(ch);
         ch.remove();
+        unshowCard(par);
     }
 
     shuffle(contarr);
@@ -21,6 +32,14 @@ reset.addEventListener('click', function () {
         let ch = contarr[i];
         par.appendChild(ch);
     }
+
+    //star correction
+    resetStars();
+    //move correction on shuffle
+    moves = 0;
+    moveEl.textContent = moves;
+    //oclist
+    oclist = [];
 });
 /*
  * Display the cards on the page
@@ -44,20 +63,7 @@ function shuffle(array) {
     return array;
 }
 
-function displayCard(ele){
-    let clist = ele.classList;
-    clist.add('open');
-    clist.add('show');
-}
-
-let deckEl = document.querySelector('.deck');
-let openedCard,target;
-let ctr=0;
-let oclist = [],res;
-let moves=0;
-let moveEl = document.querySelector('.moves');
-let starEl = document.querySelector('.stars');
-
+//Card evt listner
 deckEl.addEventListener('click', function (evt) {
     target = evt.target;
 
@@ -78,31 +84,51 @@ deckEl.addEventListener('click', function (evt) {
                 ctr = 0;
                 oclist.push(target);
                 
-                if(target.firstElementChild.className == openedCard.firstElementChild.className)
+                if(target.firstElementChild.className == openedCard.firstElementChild.className){
                     Matchcard();
+                }
                 else{
                     MismatchCard();
                 }
                 moves++;
                 moveEl.textContent = moves;
-                if(moves==5 || moves==10 || moves==15)
+                if(moves==10 || moves==15 || moves==20)
                 removestar();
             }
         }
     }
 });
 
+
+function displayCard(ele){
+    let clist = ele.classList;
+    clist.add('open');
+    clist.add('show');
+}
+
+function unshowCard(ele){
+    let arr = ele.classList;
+    arr.remove('open');
+    arr.remove('show');
+    arr.remove('match');
+}
+
+function resetStars(){
+    starEl.innerHTML = '<li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li>';
+}
+
 function Matchcard(){
     let c1 = openedCard.classList;
     let c2 = target.classList;
 
-    c1.remove('open');
-    c1.remove('show');
-    c2.remove('open');
-    c2.remove('show');
+    unshowCard(openedCard);
+    unshowCard(target);
 
     c1.add('match');
     c2.add('match');
+
+    if(oclist.length == 16)
+    setTimeout(winMsg,600);
 }
 
 
@@ -110,10 +136,8 @@ function MismatchCard(){
     let c1 = openedCard.classList;
     let c2 = target.classList;
 
-    c1.remove('open');
-    c1.remove('show');
-    c2.remove('open');
-    c2.remove('show');
+    unshowCard(openedCard);
+    unshowCard(target);
 
     c1.add('wrong');
     c2.add('wrong');
@@ -126,10 +150,9 @@ function remove(){
     let c1 = openedCard.classList;
     let c2 = target.classList;
 
-    c1.remove('open');
-    c1.remove('show');
-    c2.remove('open');
-    c2.remove('show');
+    unshowCard(openedCard);
+    unshowCard(target);
+
     c1.remove('wrong');
     c2.remove('wrong');
     
@@ -150,6 +173,11 @@ function checkcard(){
 
 function removestar(){
         starEl.lastElementChild.remove();
+}
+
+function winMsg(){
+    alert(`Congratulations!! You Won!!
+You took ${moves} Moves`);
 }
 /*
  * set up the event listener for a card. If a card is clicked:
