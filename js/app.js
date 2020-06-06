@@ -53,27 +53,35 @@ function displayCard(ele){
 let deckEl = document.querySelector('.deck');
 let openedCard,target;
 let ctr=0;
+let oclist = [],res;
 
 deckEl.addEventListener('click', function (evt) {
     target = evt.target;
+
     if(target.nodeName == "LI" || target.nodeName == "I"){
+        
+        res = checkcard();
 
-        if(ctr == 0){
-            displayCard(target);
-            ctr = 1;
-            openedCard = target;
-        }
-
-        else if(ctr == 1){
-            displayCard(target);
-            ctr = 0;
-            
-            if(target.firstElementChild.className == openedCard.firstElementChild.className)
-                Matchcard();
-            else{
-                MismatchCard();
+        if(res==0){
+            if(ctr == 0){
+                displayCard(target);
+                ctr = 1;
+                openedCard = target;
+                oclist.push(target);
             }
+    
+            else if(ctr == 1){
+                displayCard(target);
+                ctr = 0;
+                oclist.push(target);
                 
+                if(target.firstElementChild.className == openedCard.firstElementChild.className)
+                    Matchcard();
+                else{
+                    MismatchCard();
+                }
+                    
+            }
         }
     }
 });
@@ -104,6 +112,7 @@ function MismatchCard(){
     c1.add('wrong');
     c2.add('wrong');
 
+    oclist.splice(-2,2);
     aftermismatch();
 }
 
@@ -121,7 +130,16 @@ function remove(){
 }
 
 function aftermismatch(){
-    setTimeout(remove, 1000);
+    setTimeout(remove, 900);
+}
+
+function checkcard(){
+    for(let i=0;i<oclist.length;i++){
+        if(target == oclist[i])
+            return 1;
+    }
+
+    return 0;
 }
 /*
  * set up the event listener for a card. If a card is clicked:
