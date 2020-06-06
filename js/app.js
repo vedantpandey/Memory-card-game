@@ -54,6 +54,9 @@ let deckEl = document.querySelector('.deck');
 let openedCard,target;
 let ctr=0;
 let oclist = [],res;
+let moves=0;
+let moveEl = document.querySelector('.moves');
+let starEl = document.querySelector('.stars');
 
 deckEl.addEventListener('click', function (evt) {
     target = evt.target;
@@ -80,7 +83,10 @@ deckEl.addEventListener('click', function (evt) {
                 else{
                     MismatchCard();
                 }
-                    
+                moves++;
+                moveEl.textContent = moves;
+                if(moves==5 || moves==10 || moves==15)
+                removestar();
             }
         }
     }
@@ -140,6 +146,10 @@ function checkcard(){
     }
 
     return 0;
+}
+
+function removestar(){
+        starEl.lastElementChild.remove();
 }
 /*
  * set up the event listener for a card. If a card is clicked:
